@@ -61,13 +61,7 @@ int Matrix_height(const Matrix* mat) {
 int Matrix_row(const Matrix* mat, const int* ptr) {
   assert(mat);
 
-  for(int i = 0; i < mat->width * mat->height; i++) {
-    if(&(mat->data[i]) == ptr) {
-      return floor((double)i / mat->width);
-    }
-  }
-
-  return -1;
+  return floor((ptr - mat->data) / mat->width);
 }
 
 // REQUIRES: mat points to a valid Matrix
@@ -76,13 +70,7 @@ int Matrix_row(const Matrix* mat, const int* ptr) {
 int Matrix_column(const Matrix* mat, const int* ptr) {
   assert(mat);
 
-  for(int i = 0; i < mat->width * mat->height; i++) {
-    if(&(mat->data[i]) == ptr) {
-      return i % mat->width;
-    }
-  }
-
-  return -1;
+  return (ptr - mat->data) % mat->width;
 }
 
 // REQUIRES: mat points to a valid Matrix
