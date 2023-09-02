@@ -94,9 +94,10 @@ private:
             }
         };
         std::atexit(func);
-#ifdef _GLIBCXX_HAVE_AT_QUICK_EXIT
-        std::at_quick_exit(func);
-#endif
+        
+        #ifdef _GLIBCXX_HAVE_AT_QUICK_EXIT
+            std::at_quick_exit(func);
+        #endif
     }
     TestSuite(const TestSuite&) = delete;
     bool operator=(const TestSuite&) = delete;
