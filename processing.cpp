@@ -103,7 +103,8 @@ void compute_energy_matrix(const Image* img, Matrix* energy) {
       Pixel westPixel = Image_get_pixel(img, row, col - 1);
       Pixel eastPixel = Image_get_pixel(img, row, col + 1);
 
-      int energyVal = squared_difference(northPixel, soutPixel) + squared_difference(westPixel, eastPixel);
+      int energyVal = squared_difference(northPixel, soutPixel) 
+                      + squared_difference(westPixel, eastPixel);
 
       *Matrix_at(energy, row, col) = energyVal;
     }
@@ -219,7 +220,7 @@ void remove_vertical_seam(Image *img, const int seam[]) {
     for(int col = 0; col < width; col++) {
       if(col == seam[row])
         continue;
-        
+
       Image_set_pixel(
         temp, 
         row, 
@@ -253,17 +254,22 @@ void seam_carve_width(Image *img, int newWidth) {
 
   int width = Image_width(img);
 
+  Matrix* costMatrix = new Matrix();
+  Matrix* energyMatrix = new Matrix();
   for(int i = width; i > newWidth; i--) {
-    Matrix* energyMatrix = new Matrix();
     compute_energy_matrix(img, energyMatrix);
 
-    Matrix* costMatrix = new Matrix();
     compute_vertical_cost_matrix(energyMatrix, costMatrix);
 
     int* seamArr = new int[Image_height(img)];
     find_minimal_vertical_seam(costMatrix, seamArr);
     remove_vertical_seam(img, seamArr);
+
+    delete seamArr;
   }
+
+  delete costMatrix;
+  delete energyMatrix;
 }
 
 // REQUIRES: img points to a valid Image

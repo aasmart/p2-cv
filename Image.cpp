@@ -83,7 +83,11 @@ void Image_init(Image* img, std::istream& is) {
 void Image_print(const Image* img, std::ostream& os) {
   assert(img);
 
-  os << "P3" << std::endl << img-> width << " " << img->height << std::endl << "255" << std::endl;
+  os << "P3" << std::endl 
+    << img-> width << " " 
+    << img->height << std::endl 
+    << "255" << std::endl;
+
   for(int row = 0; row < img->height; row++) {
     for(int col = 0; col < img->width; col++) {
       const int* red = Matrix_at(&img->red_channel, row, col);

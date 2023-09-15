@@ -32,10 +32,11 @@ void Matrix_print(const Matrix* mat, std::ostream& os) {
   assert(mat);
   
   os << mat->width << " " << mat->height << std::endl;
-  for(int i = 0; i < mat->height * mat->width; i++) {
-    if(i != 0 && i % mat->width == 0)
-      os << std::endl;
-    os << mat->data[i] << " ";
+  for(int row = 0; row < mat->height; row++) {
+    for(int col = 0; col < mat->width; col++) {
+      os << mat->data[row * mat->width + col] << " ";
+    }
+    os << std::endl;
   }
 }
 
@@ -124,8 +125,13 @@ void Matrix_fill_border(Matrix* mat, int value) {
   for(int i = 0; i < mat->width * mat->height; i++) {
     int row = floor((double)i / mat->width);
     int col = (i % mat->width);
-    if(row == 0 || row == mat->height - 1 || col == 0 || col == mat->width - 1) 
+    if(row == 0 
+        || row == mat->height - 1 
+        || col == 0 
+        || col == mat->width - 1
+    ) { 
       mat->data[i] = value;
+    }
   }
 }
 
@@ -151,16 +157,23 @@ int Matrix_max(const Matrix* mat) {
 //           column_end (exclusive).
 //           If multiple elements are minimal, returns the column of
 //           the leftmost one.
-int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
-                                      int column_start, int column_end) {
+int Matrix_column_of_min_value_in_row(
+  const Matrix* mat, 
+  int row,
+  int column_start, 
+  int column_end
+) {
   assert(mat);
   assert(0 <= row && row < Matrix_height(mat));
   assert(0 <= column_start && column_end <= Matrix_width(mat));
   assert(column_start < column_end);
 
+  int startPos = row * Matrix_width(mat) + column_start;
+  int endPos = row * Matrix_width(mat) + column_end;
+
   int min = std::numeric_limits<int>::max();
   int column = -1;
-  for(int i = row * Matrix_width(mat) + column_start; i < row * Matrix_width(mat) + column_end; i++) {
+  for(int i = startPos; i < endPos; i++) {
     if(mat->data[i] < min) {
       min = mat->data[i];
       column = i;
@@ -188,8 +201,11 @@ int Matrix_min_value_in_row(
   assert(0 <= column_start && column_end <= Matrix_width(mat));
   assert(column_start < column_end);
 
+  int startPos = row * Matrix_width(mat) + column_start;
+  int endPos = row * Matrix_width(mat) + column_end;
+
   int min = std::numeric_limits<int>::max();
-  for(int i = row * Matrix_width(mat) + column_start; i < row * Matrix_width(mat) + column_end; i++) {
+  for(int i = startPos; i < endPos; i++) {
     min = std::min(min, mat->data[i]);
   }
 
