@@ -5,7 +5,7 @@
 CXX ?= g++
 
 # Compiler flags
-CXXFLAGS ?= --std=c++17 -Wall -Werror -pedantic -g -Wno-sign-compare -Wno-comment
+CXXFLAGS ?= --std=c++17 -Wall -Werror -pedantic -g -Wno-sign-compare -Wno-comment-fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG
 
 # Run a regression test
 test: Matrix_public_test.exe Matrix_tests.exe Image_public_test.exe Image_tests.exe processing_public_tests.exe resize.exe
@@ -15,7 +15,7 @@ test: Matrix_public_test.exe Matrix_tests.exe Image_public_test.exe Image_tests.
 	./resize.exe dog.ppm dog_4x5.out.ppm 4 5
 	diff dog_4x5.out.ppm dog_4x5.correct.ppm
 
-Matrix_public_test.exe: Matrix_public_test.cpp Matrix.cpp Matrix_test_helpers.cpp
+Matrix_public_test.exe: Matrix_public_test.cpp Matrix.cpp Matrix_test_helpers.cpp 
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 Matrix_tests.exe: Matrix_tests.cpp Matrix.cpp Matrix_test_helpers.cpp
