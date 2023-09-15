@@ -3,8 +3,6 @@
 #include <cassert>
 #include "processing.hpp"
 
-using namespace std;
-
 // v DO NOT CHANGE v ------------------------------------------------
 // The implementation of rotate_left is provided for you.
 // REQUIRES: img points to a valid Image
@@ -219,14 +217,15 @@ void remove_vertical_seam(Image *img, const int seam[]) {
 
   for(int row = 0; row < height; row++) {
     for(int col = 0; col < width; col++) {
-      if(col == seam[(width - 1) - row])
+      if(col == seam[row])
         continue;
+        
       Image_set_pixel(
         temp, 
         row, 
-        col - (col >= seam[(width - 1) - row] ? 1 : 0), 
-        Image_get_pixel(img, row, col));
-      std::cout << col << " ";
+        col - (col >= seam[row] ? 1 : 0), 
+        Image_get_pixel(img, row, col)
+      );
     }
   }
 
@@ -252,16 +251,17 @@ void seam_carve_width(Image *img, int newWidth) {
   assert(img);
   assert(0 < newWidth && newWidth <= Image_width(img));
 
-  Matrix* energyMatrix = new Matrix();
-  compute_energy_matrix(img, energyMatrix);
+  int width = Image_width(img);
 
-  Matrix* costMatrix = new Matrix();
-  compute_vertical_cost_matrix(energyMatrix, costMatrix);
+  for(int i = width; i > newWidth; i--) {
+    Matrix* energyMatrix = new Matrix();
+    compute_energy_matrix(img, energyMatrix);
 
-  int* seamArr = new int[Image_height(img)];
-  find_minimal_vertical_seam(costMatrix, seamArr);
+    Matrix* costMatrix = new Matrix();
+    compute_vertical_cost_matrix(energyMatrix, costMatrix);
 
-  while(Image_width(img) > newWidth) {
+    int* seamArr = new int[Image_height(img)];
+    find_minimal_vertical_seam(costMatrix, seamArr);
     remove_vertical_seam(img, seamArr);
   }
 }

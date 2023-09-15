@@ -20,7 +20,7 @@ main
 
 # Output files
 *.log
-*.out
+*.out.*
 
 # Compiled Object files
 *.slo
@@ -402,17 +402,3 @@ __pycache__/
 
 # OpenCover UI analysis results
 OpenCover/
-crabster_50x45.out.ppm
-crabster_cost.out.txt
-crabster_energy.out.txt
-crabster_left.out.ppm
-crabster_removed.out.ppm
-crabster_right.out.ppm
-crabster_seam.out.txt
-dog_4x5.out.ppm
-dog_cost.out.txt
-dog_energy.out.txt
-dog_left.out.ppm
-dog_removed.out.ppm
-dog_right.out.ppm
-dog_seam.out.txt
