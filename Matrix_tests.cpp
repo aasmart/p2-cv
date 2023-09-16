@@ -291,6 +291,36 @@ TEST(test_min_row_1_width) {
   delete mat;
 }
 
+TEST(test_min_row_1xN) {
+  Matrix* mat = new Matrix();
+  int width = 5;
+  int height = 1;
+
+  Matrix_init(mat, width, height);
+
+  Matrix_fill(mat, 20);
+  *Matrix_at(mat, 0, 2) = 5;
+
+  ASSERT_EQUAL(Matrix_min_value_in_row(mat, 0, 0, width), 5);
+
+  delete mat;
+}
+
+TEST(test_min_row_Nx1) {
+  Matrix* mat = new Matrix();
+  int width = 1;
+  int height = 5;
+
+  Matrix_init(mat, width, height);
+
+  Matrix_fill(mat, 20);
+  *Matrix_at(mat, 2, 0) = 5;
+
+  ASSERT_EQUAL(Matrix_min_value_in_row(mat, 2, 0, width), 5);
+
+  delete mat;
+}
+
 TEST(test_min_row_extremes) {
   Matrix* mat = new Matrix();
   int width = 5;
