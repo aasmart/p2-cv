@@ -265,7 +265,7 @@ void seam_carve_width(Image *img, int newWidth) {
     find_minimal_vertical_seam(costMatrix, seamArr);
     remove_vertical_seam(img, seamArr);
 
-    delete seamArr;
+    delete[] seamArr;
   }
 
   delete costMatrix;

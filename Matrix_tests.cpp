@@ -46,7 +46,7 @@ TEST(test_dimensions) {
 TEST(test_max) {
   Matrix* mat = new Matrix;
 
-  int width = 5;
+  int width = 3;
   int height = 5;
   int max = 10;
 
@@ -163,6 +163,26 @@ TEST(test_filled_border_1x1) {
   delete mat;
 }
 
+TEST(test_filled_border_1xn) {
+  Matrix* mat = new Matrix();
+  int width = 1;
+  int height = 5;
+
+  Matrix_init(mat, width, height);
+
+  Matrix_fill(mat, 1);
+  Matrix_fill_border(mat, 5);
+
+  for(int row = 0; row < height; row++) {
+    for(int col = 0; col < width; col++) {
+      ASSERT_TRUE(col < 1)
+      ASSERT_EQUAL(*Matrix_at(mat, row, col), 5);
+    }
+  }
+
+  delete mat;
+}
+
 TEST(test_row_column) {
   Matrix* mat = new Matrix();
 
@@ -189,6 +209,36 @@ TEST(test_row_column) {
     << "0 1 2 3 4 5 6 " << std::endl
     << "7 8 9 10 11 12 13 " << std::endl
     << "14 15 16 17 18 19 20 " << std::endl;
+
+  ASSERT_EQUAL(matrix.str(), matrix_actual.str());
+
+  delete mat;
+}
+
+TEST(test_row_column_1x1) {
+  Matrix* mat = new Matrix();
+
+  int width = 1;
+  int height = 1;
+
+  Matrix_init(mat, width, height);
+
+  for(int row = 0; row < height; row++) {
+    for(int col = 0; col < width; col++) {
+      int* item = Matrix_at(mat, row, col);
+      ASSERT_EQUAL(Matrix_row(mat, item), row);
+      ASSERT_EQUAL(Matrix_column(mat, item), col);
+
+      *item = row * width + col;
+    }
+  }
+
+  std::stringstream matrix;
+  Matrix_print(mat, matrix);
+
+  std::stringstream matrix_actual;
+  matrix_actual << width << " " << height << std::endl
+    << "0 " << std::endl;
 
   ASSERT_EQUAL(matrix.str(), matrix_actual.str());
 
@@ -318,6 +368,30 @@ TEST(test_matrix_print_2) {
   std::stringstream actual;
   Matrix_print(mat, actual);
   ASSERT_EQUAL(expected.str(), actual.str());
+
+  delete mat;
+}
+
+TEST(test_width) {
+  Matrix* mat = new Matrix();
+  int width = 5;
+  int height = 3;
+
+  Matrix_init(mat, width, height);
+
+  ASSERT_EQUAL(Matrix_width(mat), width);
+
+  delete mat;
+}
+
+TEST(test_height) {
+  Matrix* mat = new Matrix();
+  int width = 5;
+  int height = 3;
+
+  Matrix_init(mat, width, height);
+
+  ASSERT_EQUAL(Matrix_height(mat), height);
 
   delete mat;
 }

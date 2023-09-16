@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <cassert>
+#include <fstream>
 
 // Here's a free test for you! Model yours after this one.
 // Test functions have no interface and thus no RMEs, but
@@ -80,6 +81,39 @@ TEST(test_img_init) {
       ASSERT_TRUE(Pixel_equal(Image_get_pixel(img, row, col), pixel));
     }
   }
+
+  delete img;
+}
+
+TEST(test_img_ppm) {
+  Image* img = new Image();
+
+  std::string inFileName = "dog.ppm";
+  std::ifstream inputStream;
+  inputStream.open(inFileName);
+
+  ASSERT_TRUE(inputStream.is_open());
+
+  Image_init(img, inputStream);
+
+  ASSERT_EQUAL(Image_width(img), 5);
+  ASSERT_EQUAL(Image_height(img), 5);
+
+  std::ostringstream imagePrint;
+  Image_print(img, imagePrint);
+
+  std::ostringstream imageCorrect;
+  imageCorrect 
+    << "P3\n"
+    << "5 5\n"
+    << "255\n"
+    << "0 0 0 0 0 0 255 255 250 0 0 0 0 0 0 \n"
+    << "255 255 250 126 66 0 126 66 0 126 66 0 255 255 250 \n"
+    << "126 66 0 0 0 0 255 219 183 0 0 0 126 66 0 \n"
+    << "255 219 183 255 219 183 0 0 0 255 219 183 255 219 183 \n"
+    << "255 219 183 0 0 0 134 0 0 0 0 0 255 219 183 \n";
+
+  ASSERT_EQUAL(imagePrint.str(), imageCorrect.str());
 
   delete img;
 }
@@ -167,6 +201,28 @@ TEST(test_set_pixel_1x1) {
 
   Image_set_pixel(img, 0, 0, pixel);
   ASSERT_TRUE(Pixel_equal(Image_get_pixel(img, 0, 0), pixel));
+
+  delete img;
+}
+
+TEST(image_height) {
+  Image* img = new Image();
+  int width = 4;
+  int height = 7;
+
+  Image_init(img, width, height);
+  ASSERT_EQUAL(Image_height(img), height);
+
+  delete img;
+}
+
+TEST(image_width) {
+  Image* img = new Image();
+  int width = 4;
+  int height = 7;
+
+  Image_init(img, width, height);
+  ASSERT_EQUAL(Image_width(img), width);
 
   delete img;
 }
