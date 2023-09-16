@@ -37,6 +37,11 @@ int main(int argc, char *argv[]) {
     std::ofstream fileOutStream;
     fileOutStream.open(out.c_str());
 
+    if(!fileOutStream.is_open()) {
+        std::cout << "Error opening file: " << out << std::endl;
+        return 2;
+    }
+
     Image_print(img, fileOutStream);
 
     fileOutStream.close();
