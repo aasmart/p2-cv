@@ -375,6 +375,37 @@ TEST(test_min_col_in_row_1x1) {
   delete mat;
 }
 
+TEST(test_min_row_col_extremes) {
+  Matrix* mat = new Matrix();
+  int width = 5;
+  int height = 8;
+
+  Matrix_init(mat, width, height);
+  Matrix_fill(mat, 10);
+
+  *Matrix_at(mat, 7, 0) = 2;
+
+  ASSERT_EQUAL(
+    Matrix_column_of_min_value_in_row(mat, 7, 0, 5), 0
+  );
+
+  *Matrix_at(mat, 0, 0) = 3;
+  *Matrix_at(mat, 0, 4) = 1;
+
+  ASSERT_EQUAL(
+    Matrix_column_of_min_value_in_row(mat, 0, 0, 5), 4
+  );
+
+  *Matrix_at(mat, 1, 0) = 3;
+  *Matrix_at(mat, 1, 4) = 5;
+
+  ASSERT_EQUAL(
+    Matrix_column_of_min_value_in_row(mat, 1, 0, 5), 0
+  );
+
+  delete mat;
+}
+
 TEST(test_init) {
   Matrix* mat = new Matrix();
   Matrix_init(mat, 5, 3);
