@@ -85,6 +85,27 @@ TEST(test_img_init) {
   delete img;
 }
 
+TEST(test_img_init_1x1) {
+  Image* img = new Image();
+
+  Image_init(img, 1, 1);
+
+  ASSERT_EQUAL(Image_width(img), 1);
+  ASSERT_EQUAL(Image_height(img), 1);
+  
+  Pixel pixel{0, 5, 10};
+
+  Image_fill(img, pixel);
+  
+  for(int row = 0; row < Image_height(img); row++) {
+    for(int col = 0; col < Image_width(img); col++) {
+      ASSERT_TRUE(Pixel_equal(Image_get_pixel(img, row, col), pixel));
+    }
+  }
+
+  delete img;
+}
+
 TEST(test_img_ppm) {
   Image* img = new Image();
 
@@ -220,6 +241,28 @@ TEST(image_width) {
   Image* img = new Image();
   int width = 4;
   int height = 7;
+
+  Image_init(img, width, height);
+  ASSERT_EQUAL(Image_width(img), width);
+
+  delete img;
+}
+
+TEST(image_height_1x1) {
+  Image* img = new Image();
+  int width = 1;
+  int height = 1;
+
+  Image_init(img, width, height);
+  ASSERT_EQUAL(Image_height(img), height);
+
+  delete img;
+}
+
+TEST(image_width_1x1) {
+  Image* img = new Image();
+  int width = 1;
+  int height = 1;
 
   Image_init(img, width, height);
   ASSERT_EQUAL(Image_width(img), width);
