@@ -254,7 +254,7 @@ TEST(test_min_row) {
   Matrix_init(mat, width, height);
   Matrix_fill(mat, 5);
 
-  *Matrix_at(mat, 0, 6) = 3;
+  *Matrix_at(mat, 0, 3) = 3;
 
   ASSERT_EQUAL(Matrix_min_value_in_row(mat, 0, 0, width), 3);
 
@@ -321,7 +321,7 @@ TEST(test_min_row_Nx1) {
   delete mat;
 }
 
-TEST(test_min_row_extremes) {
+TEST(test_min_row_full_width) {
   Matrix* mat = new Matrix();
   int width = 5;
   int height = 8;
@@ -330,19 +330,30 @@ TEST(test_min_row_extremes) {
   Matrix_fill(mat, 10);
 
   *Matrix_at(mat, 7, 0) = 2;
+  *Matrix_at(mat, 0, 4) = 3;
 
   ASSERT_EQUAL(Matrix_min_value_in_row(mat, 7, 0, 5), 2);
+  ASSERT_EQUAL(Matrix_min_value_in_row(mat, 0, 0, 5), 3);
+  
+  delete mat;
+}
 
-  *Matrix_at(mat, 0, 0) = 3;
-  *Matrix_at(mat, 0, 4) = 1;
+TEST(test_min_row_full_width_extremes) {
+  Matrix* mat = new Matrix();
+  int width = 5;
+  int height = 8;
 
-  ASSERT_EQUAL(Matrix_min_value_in_row(mat, 0, 0, 5), 1);
+  Matrix_init(mat, width, height);
+  Matrix_fill(mat, 10);
 
-  *Matrix_at(mat, 1, 0) = 3;
-  *Matrix_at(mat, 1, 4) = 5;
+  *Matrix_at(mat, 7, 0) = 2;
+  *Matrix_at(mat, 7, 4) = 1;
+  *Matrix_at(mat, 0, 4) = 3;
+  *Matrix_at(mat, 0, 0) = 2;
 
-  ASSERT_EQUAL(Matrix_min_value_in_row(mat, 1, 0, 5), 3);
-
+  ASSERT_EQUAL(Matrix_min_value_in_row(mat, 7, 0, 5), 1);
+  ASSERT_EQUAL(Matrix_min_value_in_row(mat, 0, 0, 5), 2);
+  
   delete mat;
 }
 
@@ -354,9 +365,9 @@ TEST(test_min_col_in_row) {
 
   Matrix_init(mat, width, height);
   Matrix_fill(mat, 2);
-  *Matrix_at(mat, 2, 3) = 0;
+  *Matrix_at(mat, 2, 2) = 0;
 
-  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(mat, 2, 0, 4), 3);
+  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(mat, 2, 0, 4), 2);
 
   delete mat;
 }
@@ -375,7 +386,7 @@ TEST(test_min_col_in_row_1x1) {
   delete mat;
 }
 
-TEST(test_min_row_col_extremes) {
+TEST(test_min_col_in_row_full_width) {
   Matrix* mat = new Matrix();
   int width = 5;
   int height = 8;
@@ -384,25 +395,30 @@ TEST(test_min_row_col_extremes) {
   Matrix_fill(mat, 10);
 
   *Matrix_at(mat, 7, 0) = 2;
+  *Matrix_at(mat, 0, 4) = 3;
 
-  ASSERT_EQUAL(
-    Matrix_column_of_min_value_in_row(mat, 7, 0, 5), 0
-  );
+  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(mat, 7, 0, 5), 0);
+  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(mat, 0, 0, 5), 4);
+  
+  delete mat;
+}
 
-  *Matrix_at(mat, 0, 0) = 3;
-  *Matrix_at(mat, 0, 4) = 1;
+TEST(test_min_col_in_row_full_width_extremes) {
+  Matrix* mat = new Matrix();
+  int width = 5;
+  int height = 8;
 
-  ASSERT_EQUAL(
-    Matrix_column_of_min_value_in_row(mat, 0, 0, 5), 4
-  );
+  Matrix_init(mat, width, height);
+  Matrix_fill(mat, 10);
 
-  *Matrix_at(mat, 1, 0) = 3;
-  *Matrix_at(mat, 1, 4) = 5;
+  *Matrix_at(mat, 7, 0) = 2;
+  *Matrix_at(mat, 7, 4) = 1;
+  *Matrix_at(mat, 0, 4) = 3;
+  *Matrix_at(mat, 0, 0) = 2;
 
-  ASSERT_EQUAL(
-    Matrix_column_of_min_value_in_row(mat, 1, 0, 5), 0
-  );
-
+  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(mat, 7, 0, 5), 4);
+  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(mat, 0, 0, 5), 0);
+  
   delete mat;
 }
 
@@ -412,6 +428,16 @@ TEST(test_init) {
 
   ASSERT_EQUAL(Matrix_width(mat), 5);
   ASSERT_EQUAL(Matrix_height(mat), 3)
+
+  delete mat;
+}
+
+TEST(test_init_1x1) {
+  Matrix* mat = new Matrix();
+  Matrix_init(mat, 1, 1);
+
+  ASSERT_EQUAL(Matrix_width(mat), 1);
+  ASSERT_EQUAL(Matrix_height(mat), 1)
 
   delete mat;
 }
@@ -456,34 +482,6 @@ TEST(test_height) {
 
   delete mat;
 }
-
-// TEST(test_at) {
-//   Matrix* mat = new Matrix;
-//   int width = 3;
-//   int height = 5;
-//   int fill = 25;
-//   Matrix_init(mat, width, height);
-//   Matrix_fill(mat, fill);
-
-//   int row = 2;
-//   int column = 2;
-
-//   Matrix_at(mat, row, column);
-// }
-
-// TEST(test_mat_row) {
-//   Matrix *mat = new Matrix;
-
-//   int width = 5;
-//   int height = 3;
-
-//   Matrix_init(mat, width, height);
-  
-// }
-
-// ADD YOUR TESTS HERE
-// You are encouraged to use any functions from Matrix_test_helpers.hpp as needed.
-
 
 // NOTE: The unit test framework tutorial in Lab 2 originally
 // had a semicolon after TEST_MAIN(). Although including and
