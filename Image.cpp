@@ -84,12 +84,12 @@ void Image_print(const Image* img, std::ostream& os) {
   assert(img);
 
   os << "P3" << std::endl 
-    << img-> width << " " 
-    << img->height << std::endl 
+    << Image_width(img) << " " 
+    << Image_height(img) << std::endl 
     << "255" << std::endl;
 
-  for(int row = 0; row < img->height; row++) {
-    for(int col = 0; col < img->width; col++) {
+  for(int row = 0; row < Image_height(img); row++) {
+    for(int col = 0; col < Image_width(img); col++) {
       const int* red = Matrix_at(&img->red_channel, row, col);
       const int* blue = Matrix_at(&img->blue_channel, row, col);
       const int* green = Matrix_at(&img->green_channel, row, col);
@@ -121,9 +121,9 @@ int Image_height(const Image* img) {
 //           0 <= column && column < Image_width(img)
 // EFFECTS:  Returns the pixel in the Image at the given row and column.
 Pixel Image_get_pixel(const Image* img, int row, int column) {
+  assert(img);
   assert(0 <= row && row < Image_height(img));
   assert(0 <= column && column < Image_width(img));
-  assert(img);
 
   const int* red = Matrix_at(&img->red_channel, row, column);
   const int* blue = Matrix_at(&img->blue_channel, row, column);
@@ -139,9 +139,9 @@ Pixel Image_get_pixel(const Image* img, int row, int column) {
 // EFFECTS:  Sets the pixel in the Image at the given row and column
 //           to the given color.
 void Image_set_pixel(Image* img, int row, int column, Pixel color) {
+  assert(img);
   assert(0 <= row && row < Image_height(img));
   assert(0 <= column && column < Image_width(img));
-  assert(img);
 
   int* red = Matrix_at(&img->red_channel, row, column);
   int* blue = Matrix_at(&img->blue_channel, row, column);
