@@ -31,10 +31,10 @@ void Matrix_init(Matrix* mat, int width, int height) {
 void Matrix_print(const Matrix* mat, std::ostream& os) {
   assert(mat);
   
-  os << mat->width << " " << mat->height << std::endl;
-  for(int row = 0; row < mat->height; row++) {
-    for(int col = 0; col < mat->width; col++) {
-      os << mat->data[row * mat->width + col] << " ";
+  os << Matrix_width(mat) << " " << Matrix_height(mat) << std::endl;
+  for(int row = 0; row < Matrix_height(mat); row++) {
+    for(int col = 0; col < Matrix_width(mat); col++) {
+      os << mat->data[row * Matrix_width(mat) + col] << " ";
     }
     os << std::endl;
   }
@@ -61,8 +61,9 @@ int Matrix_height(const Matrix* mat) {
 // EFFECTS:  Returns the row of the element pointed to by ptr.
 int Matrix_row(const Matrix* mat, const int* ptr) {
   assert(mat);
+  assert(ptr);
 
-  return floor((ptr - mat->data) / mat->width);
+  return floor((ptr - mat->data) / Matrix_width(mat));
 }
 
 // REQUIRES: mat points to a valid Matrix
@@ -70,8 +71,9 @@ int Matrix_row(const Matrix* mat, const int* ptr) {
 // EFFECTS:  Returns the column of the element pointed to by ptr.
 int Matrix_column(const Matrix* mat, const int* ptr) {
   assert(mat);
+  assert(ptr);
 
-  return (ptr - mat->data) % mat->width;
+  return (ptr - mat->data) % Matrix_width(mat);
 }
 
 // REQUIRES: mat points to a valid Matrix
@@ -84,10 +86,10 @@ int Matrix_column(const Matrix* mat, const int* ptr) {
 //           at the given row and column.
 int* Matrix_at(Matrix* mat, int row, int column) {
   assert(mat);
-  assert(0 <= row && row < mat->height);
-  assert(0 <= column && column < mat->width);
+  assert(0 <= row && row < Matrix_height(mat));
+  assert(0 <= column && column < Matrix_width(mat));
 
-  return &(mat->data[column + mat->width * row]);
+  return &(mat->data[column + Matrix_width(mat) * row]);
 }
 
 // REQUIRES: mat points to a valid Matrix
@@ -98,10 +100,10 @@ int* Matrix_at(Matrix* mat, int row, int column) {
 //           the Matrix at the given row and column.
 const int* Matrix_at(const Matrix* mat, int row, int column) {
   assert(mat);
-  assert(0 <= row && row < mat->height);
-  assert(0 <= column && column < mat->width);
+  assert(0 <= row && row < Matrix_height(mat));
+  assert(0 <= column && column < Matrix_width(mat));
 
-  return &mat->data[column + mat->width * row];
+  return &mat->data[column + Matrix_width(mat) * row];
 }
 
 // REQUIRES: mat points to a valid Matrix
@@ -110,7 +112,7 @@ const int* Matrix_at(const Matrix* mat, int row, int column) {
 void Matrix_fill(Matrix* mat, int value) {
   assert(mat);
 
-  for(int i = 0; i < mat->width * mat->height; i++)
+  for(int i = 0; i < Matrix_width(mat) * Matrix_height(mat); i++)
     mat->data[i] = value;
 }
 
@@ -122,13 +124,13 @@ void Matrix_fill(Matrix* mat, int value) {
 void Matrix_fill_border(Matrix* mat, int value) {
   assert(mat);
 
-  for(int i = 0; i < mat->width * mat->height; i++) {
-    int row = floor((double)i / mat->width);
-    int col = (i % mat->width);
+  for(int i = 0; i < Matrix_width(mat) * Matrix_height(mat); i++) {
+    int row = floor((double)i / Matrix_width(mat));
+    int col = (i % Matrix_width(mat));
     if(row == 0 
-        || row == mat->height - 1 
+        || row == Matrix_height(mat) - 1 
         || col == 0 
-        || col == mat->width - 1
+        || col == Matrix_width(mat) - 1
     ) { 
       mat->data[i] = value;
     }
@@ -141,7 +143,7 @@ int Matrix_max(const Matrix* mat) {
   assert(mat);
   
   int max = mat->data[0];
-  for(int i = 0; i < mat->width * mat->height; i++)
+  for(int i = 0; i < Matrix_width(mat) * Matrix_height(mat); i++)
     max = std::max(max, mat->data[i]);
   
   return max;
@@ -171,9 +173,9 @@ int Matrix_column_of_min_value_in_row(
   int startPos = row * Matrix_width(mat) + column_start;
   int endPos = row * Matrix_width(mat) + column_end;
 
-  int min = std::numeric_limits<int>::max();
-  int column = -1;
-  for(int i = startPos; i < endPos; i++) {
+  int min = mat->data[startPos];
+  int column = startPos;
+  for(int i = startPos + 1; i < endPos; i++) {
     if(mat->data[i] < min) {
       min = mat->data[i];
       column = i;
@@ -204,10 +206,9 @@ int Matrix_min_value_in_row(
   int startPos = row * Matrix_width(mat) + column_start;
   int endPos = row * Matrix_width(mat) + column_end;
 
-  int min = std::numeric_limits<int>::max();
-  for(int i = startPos; i < endPos; i++) {
+  int min = mat->data[startPos];
+  for(int i = startPos + 1; i < endPos; i++)
     min = std::min(min, mat->data[i]);
-  }
 
   return min;
 }
