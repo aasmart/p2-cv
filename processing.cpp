@@ -143,7 +143,7 @@ void compute_vertical_cost_matrix(const Matrix* energy, Matrix *cost) {
           cost,
           row - 1,
           std::max(0, col - 1),
-          std::min(width, col + 2) // col + 2 since Matrix_min_value_in_row is weird.
+          std::min(width, col + 2)
         );
 
       int costValue = *Matrix_at(energy, row, col) + min;
@@ -187,7 +187,7 @@ void find_minimal_vertical_seam(const Matrix* cost, int seam[]) {
       cost, 
       i, 
       std::max(0, minCol - 1), 
-      std::min(width, minCol + 2) // col + 2 since Matrix_column_of_min_value_in_row is weird.
+      std::min(width, minCol + 2)
     );
     seam[i] = minCol;
   }
