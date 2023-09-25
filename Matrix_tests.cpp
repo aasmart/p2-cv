@@ -483,6 +483,19 @@ TEST(test_height) {
   delete mat;
 }
 
+TEST(matrix_at_const) {
+  Matrix *mat = new Matrix;
+  Matrix_init(mat, 3, 4);
+
+  Matrix_fill(mat, 0);
+  Matrix_fill_border(mat, 3);
+
+  const int* val = Matrix_at(mat, 2, 1); 
+  ASSERT_EQUAL(*val, 0);
+
+  delete mat;
+}
+
 // NOTE: The unit test framework tutorial in Lab 2 originally
 // had a semicolon after TEST_MAIN(). Although including and
 // excluding the semicolon are both correct according to the c++
